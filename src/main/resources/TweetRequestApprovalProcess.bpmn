@@ -231,6 +231,11 @@
     <bpmn:sequenceFlow id="Flow_0m0chuj" sourceRef="Gateway_0rqe009" targetRef="ManuellePrufungErforderlichGateway" />
     <bpmn:sequenceFlow id="Flow_0zq3832" sourceRef="BenutzerinformationenAuslesenTask" targetRef="AufVerboteneWorterPrufenTask" />
     <bpmn:startEvent id="TweetEingereichtStartEvent" name="Tweet eingereicht" camunda:asyncAfter="true">
+      <bpmn:extensionElements>
+        <camunda:formData>
+          <camunda:formField id="tweetContent" label="Gewünschter Tweet text" type="string" />
+        </camunda:formData>
+      </bpmn:extensionElements>
       <bpmn:outgoing>Flow_0by82jn</bpmn:outgoing>
     </bpmn:startEvent>
     <bpmn:sequenceFlow id="Flow_0r4gqap" sourceRef="AufVerboteneWorterPrufenTask" targetRef="Gateway_0rqe009" />
@@ -241,11 +246,10 @@
 var result = tweetContent.toLowerCase().indexOf("gpi");
 execution.setVariable("checkResult", (result !== -1 ? "rejected": "manualCheckRequired"));</bpmn:script>
     </bpmn:scriptTask>
-    <bpmn:scriptTask id="TweetAnfragePrufenTask1" name="Tweet-Anfrage prüfen" scriptFormat="JavaScript">
+    <bpmn:userTask id="TweetAnfragePrufenTask1" name="Tweet-Anfrage prüfen">
       <bpmn:incoming>JaSequenceFlow</bpmn:incoming>
       <bpmn:outgoing>Flow_1codaxr</bpmn:outgoing>
-      <bpmn:script>execution.setVariable("checkResult", "accepted");</bpmn:script>
-    </bpmn:scriptTask>
+    </bpmn:userTask>
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_1rw4mjy">
@@ -440,6 +444,10 @@ execution.setVariable("checkResult", (result !== -1 ? "rejected": "manualCheckRe
       <bpmndi:BPMNShape id="Lane_11rm74y_di" bpmnElement="KommabtLane" isHorizontal="true" bioc:stroke="rgb(251, 140, 0)" bioc:fill="rgb(255, 224, 178)">
         <dc:Bounds x="190" y="1074" width="1372" height="120" />
       </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_0r4gqap_di" bpmnElement="Flow_0r4gqap">
+        <di:waypoint x="620" y="898" />
+        <di:waypoint x="665" y="898" />
+      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_0zq3832_di" bpmnElement="Flow_0zq3832">
         <di:waypoint x="463" y="898" />
         <di:waypoint x="520" y="898" />
@@ -492,10 +500,6 @@ execution.setVariable("checkResult", (result !== -1 ? "rejected": "manualCheckRe
         <di:waypoint x="332" y="743" />
         <di:waypoint x="332" y="898" />
         <di:waypoint x="363" y="898" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_0r4gqap_di" bpmnElement="Flow_0r4gqap">
-        <di:waypoint x="620" y="898" />
-        <di:waypoint x="665" y="898" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_0izqeqh_di" bpmnElement="JaSequenceFlow">
         <di:waypoint x="773" y="923" />
@@ -577,7 +581,7 @@ execution.setVariable("checkResult", (result !== -1 ? "rejected": "manualCheckRe
       <bpmndi:BPMNShape id="Activity_0vevfbf_di" bpmnElement="AufVerboteneWorterPrufenTask">
         <dc:Bounds x="520" y="858" width="100" height="80" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_0bbmmcw_di" bpmnElement="TweetAnfragePrufenTask1">
+      <bpmndi:BPMNShape id="Activity_0540rxu_di" bpmnElement="TweetAnfragePrufenTask1">
         <dc:Bounds x="823" y="1094" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Participant_1sjyo88_di" bpmnElement="MicrosoftActiveDirectoryParticipant" isHorizontal="true">
@@ -615,14 +619,14 @@ execution.setVariable("checkResult", (result !== -1 ? "rejected": "manualCheckRe
         <di:waypoint x="649" y="1240" />
         <di:waypoint x="649" y="1484" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="653" y="1206" width="75" height="27" />
+          <dc:Bounds x="653" y="1206" width="76" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_1rb76dt_di" bpmnElement="PrufergebnisKommentarMessageFlow" bioc:stroke="rgb(229, 57, 53)" bioc:fill="rgb(255, 205, 210)">
         <di:waypoint x="875" y="1315" />
         <di:waypoint x="875" y="1174" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="884" y="1242" width="74" height="27" />
+          <dc:Bounds x="885" y="1242" width="73" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_0xs1ziz_di" bpmnElement="AufgabeMitZusatzangabenMessageFlow1">
@@ -632,7 +636,7 @@ execution.setVariable("checkResult", (result !== -1 ? "rejected": "manualCheckRe
         <di:waypoint x="1250" y="1355" />
         <di:waypoint x="1182" y="1355" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1052" y="1242" width="75" height="27" />
+          <dc:Bounds x="1052" y="1242" width="76" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_16s82g5_di" bpmnElement="TweetBenutzerkontoMessageFlow">
